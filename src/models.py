@@ -1,12 +1,11 @@
 """Contains the Request models for the API"""
 
-from pprint import pprint
 import re
 
 from datetime import datetime
 
 from fastapi.responses import JSONResponse
-from fastapi import status, HTTPException
+from fastapi import status, HTTPException, Form
 
 from pydantic import BaseModel, Field, EmailStr, model_validator, field_validator
 
@@ -217,20 +216,19 @@ class User(Document, UserBase):
     )
 
 
-class CreatePost(BaseModel):
-    class Settings:
-        name = "posts"
-
-    title: str = Field(description="Title of the post")
-    content: str = Field(description="Content of the post")
+class PollOptions(BaseModel):
+    option: str = Field(description="Option for the poll")
+    votes: int = Field(description="Number of votes for the option", default=0)
 
 
 class CreatePoll(BaseModel):
     class Settings:
         name = "polls"
 
+    title: str = Field(description="Title of the poll")
     question: str = Field(description="Question of the poll")
-    options: list[str] = Field(description="Options for the poll")
+    options: list[PollOptions] = Field(description="Options for the poll")
+    duration: int = Field(description="Duration of the poll in seconds")
 
 
 class CreateAnnouncement(BaseModel):
@@ -246,26 +244,34 @@ class Announcements(Document, CreateAnnouncement):
         name = "announcements"
         is_root = True
 
-    comments: list[str] = Field(description="Comments on the announcement")
-    likes: int = Field(description="Number of likes on the announcement")
-    dislikes: int = Field(description="Number of dislikes on the announcement")
+    comments: list[str] = Field(description="Comments on the announcement", default=[])
+    likes: int = Field(description="Number of likes on the announcement", default=0)
+    dislikes: int = Field(
+        description="Number of dislikes on the announcement", default=0
+    )
 
 
 class Poll(Document, CreatePoll):
     class Settings:
         name = "polls"
 
-    votes: dict[str, int] = Field(description="Votes on the poll")
-    comments: list[str] = Field(description="Comments on the poll")
+    comments: list[str] = Field(description="Comments on the poll", default=[])
 
 
-class Post(Document, CreatePost):
+class Comment(BaseModel):
+    comment: str = Field(description="Comment on the post")
+
+
+class Post(Document):
     class Settings:
         name = "posts"
 
-    comments: list[str] = Field(description="Comments on the post")
-    likes: int = Field(description="Number of likes on the post")
-    dislikes: int = Field(description="Number of dislikes on the post")
+    title: str = Field(description="Title of the post")
+    content: str = Field(description="Content of the post")
+    image: dict | None = Field(description="Image of the post", default=None)
+    comments: list[str] = Field(description="Comments on the post", default=[])
+    likes: int = Field(description="Number of likes on the post", default=0)
+    dislikes: int = Field(description="Number of dislikes on the post", default=0)
 
 
 class VerifiedUser(User):

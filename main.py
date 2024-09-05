@@ -6,7 +6,7 @@ from src import models
 from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
 
-from src.routers import auth, users
+from src.routers import auth, users, posts, polls, announcements
 
 from contextlib import asynccontextmanager
 
@@ -49,3 +49,6 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(users.router)
+app.include_router(posts.router)
+app.include_router(polls.router)
+app.include_router(announcements.router)
