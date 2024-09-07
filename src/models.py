@@ -226,6 +226,7 @@ class CreatePoll(BaseModel):
         name = "polls"
 
     title: str = Field(description="Title of the poll")
+    author: str = Field(description="Author of the poll")
     question: str = Field(description="Question of the poll")
     options: list[PollOptions] = Field(description="Options for the poll")
     duration: int = Field(description="Duration of the poll in seconds")
@@ -267,6 +268,7 @@ class Post(Document):
         name = "posts"
 
     title: str = Field(description="Title of the post")
+    author: str = Field(description="Title of the post")
     content: str = Field(description="Content of the post")
     image: dict | None = Field(description="Image of the post", default=None)
     comments: list[str] = Field(description="Comments on the post", default=[])
@@ -290,3 +292,8 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: str | None = None
     scopes: list[str] = []
+
+
+class FakeLogin(BaseModel):
+    email: EmailStr
+    password: str
