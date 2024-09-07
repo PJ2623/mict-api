@@ -9,6 +9,7 @@ from typing import Annotated
 from dotenv import load_dotenv
 
 from src.utils.security import authenticate_user, create_access_token
+from src.models import FakeLogin, User, VerifiedUser
 
 load_dotenv()
 
@@ -36,3 +37,20 @@ async def login_for_access_token(
     )
 
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/fake-login")
+async def fake_login_for_access_token(request: FakeLogin):
+    user = await User.find_one(User.email == request.email, with_children=True)
+
+    try:
+        verified_user = VerifiedUser(**user.model_dump())
+        for post in verified_user.posts:
+            post.update(
+                {
+                    "image": f"http://localhost:8000/api/v1/posts/{verified_user.email}/{post["title"]}/image"
+                }
+            )
+        return verified_user.model_dump(exclude={"password", "permissions"})
+    except Exception as e:    
+        return user.model_dump(exclude={"password", "permissions"})

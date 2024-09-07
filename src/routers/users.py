@@ -30,14 +30,22 @@ async def create_user(request: CreateUserRequest):
 @router.post("/users/{user_id}")
 async def get_user(user_id: EmailStr):
     user = await User.find_one(User.email == user_id, with_children=True)
-    if not user:
+
+    try:
+        verified_user = VerifiedUser(**user.model_dump())
+        for post in verified_user.posts:
+            post.update(
+                {
+                    "image": f"http://localhost:8000/api/v1/posts/{user_id}/{post[title]}/image"
+                }
+            )
         return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"message": "User not found"},
+            status_code=status.HTTP_200_OK, content=user.model_dump(by_alias=True)
         )
-    return JSONResponse(
-        status_code=status.HTTP_200_OK, content=user.model_dump(by_alias=True)
-    )
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content=user.model_dump(by_alias=True)
+        )
 
 
 @router.post("/users/verify/{user_id}")
