@@ -18,6 +18,7 @@ While the primary function is to respond with information related to the Namibia
 ## Key Features
 
 ### 1. Namibian Constitution Q&A  
+
 - **Endpoint**: `/chat/constitution`  
 - **Method**: `POST`  
 - **Description**: The core functionality of this API, enabling the ChatBot to answer questions about the Namibian constitution with high accuracy and relevance.  
@@ -27,6 +28,7 @@ While the primary function is to respond with information related to the Namibia
   - `answer` (string): The ChatBot's response based on the latest information.  
 
 ### 2. Additional Functionality  
+
 - While this API is designed to focus on constitutional questions, it is not limited to them. Other endpoints exist for general-purpose question-answering, sentiment analysis, and announcements.
 
 ---
