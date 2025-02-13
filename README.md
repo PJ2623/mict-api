@@ -36,6 +36,6 @@ While the primary function is to respond with information related to the Namibia
 To start using the API, clone the repository and install the required packages:
 
 ```bash
-git clone https://github.com/your-repo/mict-chatbot.git
+git clone https://github.com/PJ2623/mict-chatbot.git
 cd mict-chatbot
 pip install -r requirements.txt
